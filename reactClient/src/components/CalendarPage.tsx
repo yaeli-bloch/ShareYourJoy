@@ -95,6 +95,9 @@ const CalendarPage = () => {
           {getCalendar()}
         </Grid2>
       </div>
+      <Button onClick={() => navigate("/MyGroup", { state: { groupId } })} variant="contained" color="primary">
+          חזרה לעמוד הקבוצה
+        </Button>
     </Container>
   );
 };

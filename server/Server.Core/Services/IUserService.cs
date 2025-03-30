@@ -12,6 +12,7 @@ namespace Server.Core.Services
         Task<Users> GetUserByIdAsync(int id);
         Task<IEnumerable<Users>> GetAllUsersAsync();
         Task<IEnumerable<Group>> GetUserGroupsAsync(int userId);
+        Task<IEnumerable<Users>> GetUsersByGroupIdAsync(int groupId);
         Task<Users> CreateUserAsync(Users user);
         Task<Users> UpdateUserAsync(Users user);
         Task DeleteUserAsync(int id);   

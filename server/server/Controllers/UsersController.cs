@@ -63,7 +63,16 @@ namespace Server.API.Controllers
 
             return Ok(userGroups);
         }
-
+        [HttpGet("byGroup/{groupId}")]
+        public async Task<IActionResult> GetUsersByGroupId(int groupId)
+        {
+            var users = await _userService.GetUsersByGroupIdAsync(groupId);
+            if (users == null || !users.Any())
+            {
+                return NotFound("לא נמצאו משתמשים לקבוצה זו.");
+            }
+            return Ok(users);
+        }
         // נתיב יצירת משתמש
         [HttpPost]
         public async Task<ActionResult<Users>> CreateUser(UserDTO user)

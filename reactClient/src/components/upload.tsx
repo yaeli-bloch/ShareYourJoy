@@ -1,106 +1,9 @@
-// import React, { useState } from "react";
-// import axios from "axios";
-// import { useAuth } from "../context/AuthContext";
-
-// const Uploader = ({ GroupId, onUploadFinish }: { GroupId: number, onUploadFinish: () => void }) => {
-//   const [file, setFile] = useState<File | null>(null);
-//   const [progress, setProgress] = useState(0);
-//   const [title, setTitle] = useState(""); // משתנה לשם הקובץ
-//   const [showForm, setShowForm] = useState(false); // מצב של פתיחת הטופס
-//   const { user } = useAuth(); // הנחת עבודה שיש לך קונטקסט עם userId ו- groupId
-
-//   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     if (e.target.files && e.target.files[0]) {
-//       setFile(e.target.files[0]);
-//       setShowForm(true); // מציג את הטופס כאשר נבחר קובץ
-//     }
-//   };
-
-//   const handleUpload = async () => {
-//     if (!file || !title) return;
-
-//     try {
-//       // שלב 1: בקשה לשרת לקבלת ה-Presigned URL
-//       const response = await axios.get("https://localhost:7207/api/upload/presigned-url", {
-//         params: { fileName: file.name },
-//       });
-
-//       const presignedUrl = response.data.url;
-
-//       // שלב 2: העלאת הקובץ ישירות ל-S3 בעזרת ה-Presigned URL
-//       await axios.put(presignedUrl, file, {
-//         headers: {
-//           "Content-Type": file.type,
-//         },
-//         onUploadProgress: (progressEvent) => {
-//           const percent = Math.round(
-//             (progressEvent.loaded * 100) / (progressEvent.total || 1)
-//           );
-//           setProgress(percent); // הצגת התקדמות העלאה
-//         },
-//       });
-
-//       // חיתוך ה-URL להורדה
-//       const fileDownloadUrl = presignedUrl.split('?')[0];
-
-//       // שלב 3: שליחת הנתונים לשרת לשמירה בבסיס הנתונים (שמירת הקובץ ברשימת הקבצים)
-//       const fileData = {
-//         title,
-//         fileUrl: fileDownloadUrl, // ה-URL להורדה של הקובץ ב-S3
-//         userId: user?.id,
-//         groupId: GroupId,
-//         createdAt: new Date(),
-//         updatedAt: new Date(),
-//       };
-//       await axios.post("https://localhost:7207/api/files", fileData);
-
-//       alert("הקובץ הועלה בהצלחה!");
-
-//       // לאחר ההעלאה, נסיר את הטופס ונתוני הקובץ
-//       setFile(null);
-//       setTitle("");
-//       setProgress(0);
-//       setShowForm(false);
-
-//       // איפוס התצוגה של input file (מאפשר בחירה מחדש)
-//       const inputFileElement = document.querySelector('input[type="file"]');
-//       if (inputFileElement) {
-//         (inputFileElement as HTMLInputElement).value = ''; // איפוס התצוגה של input file
-//       }
-
-//       // קריאה לפונקציה לאחר סיום העלאה
-//       onUploadFinish();
-
-//     } catch (error) {
-//       console.error("שגיאה בהעלאה:", error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <input type="file" onChange={handleFileChange} />
-//       {showForm && (
-//         <div>
-//           <input
-//             type="text"
-//             placeholder="הכנס כותרת לקובץ"
-//             value={title}
-//             onChange={(e) => setTitle(e.target.value)}
-//           />
-//           <button onClick={handleUpload}>העלה קובץ</button>
-//         </div>
-//       )}
-//       {progress > 0 && <div>התקדמות: {progress}%</div>}
-//     </div>
-//   );
-// };
-
-// export default Uploader;
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { Button, TextField, LinearProgress, Box, Typography, IconButton } from "@mui/material";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useNavigate } from "react-router-dom";
 
 const Uploader = ({ GroupId, onUploadFinish }: { GroupId: number, onUploadFinish: () => void }) => {
   const [file, setFile] = useState<File | null>(null);
@@ -108,7 +11,7 @@ const Uploader = ({ GroupId, onUploadFinish }: { GroupId: number, onUploadFinish
   const [title, setTitle] = useState(""); // משתנה לשם הקובץ
   const [showForm, setShowForm] = useState(false); // מצב של פתיחת הטופס
   const { user } = useAuth(); // הנחת עבודה שיש לך קונטקסט עם userId ו- groupId
-
+  const navigate = useNavigate();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
@@ -275,6 +178,9 @@ const Uploader = ({ GroupId, onUploadFinish }: { GroupId: number, onUploadFinish
           </Box>
         </Box>
       )}
+      <Button onClick={() => navigate("/MyGroup", { state: { groupId: GroupId } })} variant="contained" color="primary">
+          חזרה לעמוד הקבוצה
+      </Button>
     </Box>
   );
 };

@@ -35,7 +35,11 @@ namespace Server.Service
             var userGroups = await _userRepository.GetUserGroupsByUserIdAsync(userId);
             return userGroups;
         }
-
+        public async Task<IEnumerable<Users>> GetUsersByGroupIdAsync(int groupId)
+        {
+            // קריאה למתודה מהריפוזיטורי
+            return await _userRepository.GetUsersByGroupIdAsync(groupId);
+        }
         public async Task<Users> CreateUserAsync(Users user)
         {
             return await _userRepository.AddUserAsync(user);

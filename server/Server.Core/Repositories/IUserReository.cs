@@ -13,6 +13,7 @@ namespace Server.Core.Repositories
         Task<Users> GetUserByIdAsync(int id);
         Task<IEnumerable<Users>> GetAllUsersAsync();
         Task<IEnumerable<Group>> GetUserGroupsByUserIdAsync(int userId);
+        Task<IEnumerable<Users>> GetUsersByGroupIdAsync(int groupId);
         Task<Users> AddUserAsync(Users user);
         Task<Users> UpdateUserAsync(Users user);
         Task DeleteUserAsync(int id);

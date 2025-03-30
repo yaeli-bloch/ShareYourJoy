@@ -38,6 +38,13 @@ namespace Server.Data.Repositories
 
             return groups;
         }
+        public async Task<IEnumerable<Users>> GetUsersByGroupIdAsync(int groupId)
+        {
+            return await (from gu in _context.Set<GroupUser>()
+                          join u in _context.Set<Users>() on gu.UserId equals u.Id
+                          where gu.GroupId == groupId
+                          select u).ToListAsync();
+        }
         public async Task AddGroupForUserAsync(GroupUser groupForUser, int userId)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
